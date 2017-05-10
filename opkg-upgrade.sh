@@ -153,8 +153,8 @@ opkg_update() {
 ### OPKG Upgradable
 opkg_upgradable() {
     message_starts "Getting upgradable packages list"
-    #PACKS="$($OPKGBIN list-upgradable)"
-    PACKS="$(cat pkg-example.txt)" # testing
+    PACKS="$($OPKGBIN list-upgradable)"
+    #PACKS="$(cat pkg-example.txt)" # testing
     PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
     PACK_COUNT="$(echo "$PACKS" | wc -l)"
     message_ends
