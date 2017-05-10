@@ -78,8 +78,7 @@ get_options() {
                 CHECK_UPDATES_FLAG=$FALSE ; shift ;;
             -f|--force)
                 FORCE_FLAG=$TRUE ; shift ;;
-            -*) echo "Invalid option: $1" ; exit 2 ;;
-            *) break ;;
+            *) echo "Invalid option: $1" ; exit 2 ;;
         esac
     done
 }
