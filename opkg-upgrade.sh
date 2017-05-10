@@ -79,9 +79,6 @@ get_options() {
                 CHECK_UPDATES_FLAG=$FALSE ; shift ;;
             -f|--force)
                 FORCE_FLAG=$TRUE ; shift ;;
-            -*) 
-                print_banner
-                echo "Invalid option: $1"$'\n' ; exit 2 ;;
             *)  
                 check_invalid_opts "$1" ; break ;;
         esac
