@@ -41,47 +41,47 @@ PACK_COUNT=""
 
 ### Main function
 main() {
-	print_banner
-	if should_run_update; then
-		opkg_update
-	else
-		message_ends "Ignoring Package lists update"
-	fi
-	opkg_upgradable
-	if ! opkg_have_update; then
-		echo $'\nNo packages to install!\n'
-		exit 0
-	fi
-	echo $'\n'"Packages available for upgrade: $PACK_COUNT"$'\n'
-	echo -e "$PACKS"
-	if ! no_confirm; then
-		if ! confirm_upgrade; then
-			echo $'Cancelled by user!\n'
-			exit 3
-		fi
-	else
-		echo ""
-	fi
-	do_upgrade
-	exit $?
+    print_banner
+    if should_run_update; then
+        opkg_update
+    else
+        message_ends "Ignoring Package lists update"
+    fi
+    opkg_upgradable
+    if ! opkg_have_update; then
+        echo $'\nNo packages to install!\n'
+        exit 0
+    fi
+    echo $'\n'"Packages available for upgrade: $PACK_COUNT"$'\n'
+    echo -e "$PACKS"
+    if ! no_confirm; then
+        if ! confirm_upgrade; then
+            echo $'Cancelled by user!\n'
+            exit 3
+        fi
+    else
+        echo ""
+    fi
+    do_upgrade
+    exit $?
 }
 
 ### Parse CLI options
 get_options() {
-	while :; do
-		case "$1" in
-			-V|--version|--Version)
-				print_banner ; exit 0 ;;
-			-h|--help|--Help)
-				print_help ; exit 0 ;;
-			-n|--no-pkg-update)
-				CHECK_UPDATES_FLAG=$FALSE ; shift ;;
-			-f|--force)
-				FORCE_FLAG=$TRUE ; shift ;;
-			-*) echo "Invalid option: $1" ; exit 2 ;;
-			*) break ;;
-		esac
-	done
+    while :; do
+        case "$1" in
+            -V|--version|--Version)
+                print_banner ; exit 0 ;;
+            -h|--help|--Help)
+                print_help ; exit 0 ;;
+            -n|--no-pkg-update)
+                CHECK_UPDATES_FLAG=$FALSE ; shift ;;
+            -f|--force)
+                FORCE_FLAG=$TRUE ; shift ;;
+            -*) echo "Invalid option: $1" ; exit 2 ;;
+            *) break ;;
+        esac
+    done
 }
 
 ### Printing functions
@@ -114,31 +114,31 @@ message_ends() {
 
 ### Sanity checks
 check_for_opkg() {
-	if [[ ! -x "$OPKGBIN" ]]; then
-		echo $'ERROR! Could not find or run OPKG binary\n'
-		exit 1
-	fi
+    if [[ ! -x "$OPKGBIN" ]]; then
+        echo $'ERROR! Could not find or run OPKG binary\n'
+        exit 1
+    fi
 }
 
 ### OPKG Update
 should_run_update() {
-	return $CHECK_UPDATES_FLAG
+    return $CHECK_UPDATES_FLAG
 }
 
 opkg_update() {
-	message_starts "Updating package lists"
-	"$OPKGBIN" update >/dev/null;
-	message_ends
+    message_starts "Updating package lists"
+    "$OPKGBIN" update >/dev/null;
+    message_ends
 }
 
 ### OPKG Upgradable
 opkg_upgradable() {
-	message_starts "Getting upgradable packages list"
-	#PACKS="$($OPKGBIN list-upgradable)"
-	PACKS="$(cat pkg-example.txt)" # testing
-	PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
+    message_starts "Getting upgradable packages list"
+    PACKS="$($OPKGBIN list-upgradable)"
+    #PACKS="$(cat pkg-example.txt)" # testing
+    PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
     PACK_COUNT="$(echo "$PACKS" | wc -l)"
-	message_ends
+    message_ends
 }
 
 opkg_have_update() {
@@ -148,26 +148,26 @@ opkg_have_update() {
 
 ### CLI interaction
 no_confirm() {
-	return $FORCE_FLAG
+    return $FORCE_FLAG
 }
 
 confirm_upgrade() {
-	read -p $'\nProceed with upgrade? (Y/y to proceed) ' -n 1 -r
-	echo $'\n'
-	if [[ "$REPLY" = Y || "$REPLY" = y ]]; then
-		return $TRUE
-	fi
-		return $FALSE
+    read -p $'\nProceed with upgrade? (Y/y to proceed) ' -n 1 -r
+    echo $'\n'
+    if [[ "$REPLY" = Y || "$REPLY" = y ]]; then
+        return $TRUE
+    fi
+    return $FALSE
 }
 
 ### Upgrade packages
 do_upgrade() {
-	message_starts $'Upgrading packages\n\n'
-	"$OPKGBIN" install $PACKS_NAMES
-	ret=$?
-	echo ""
-	message_ends $'Upgrade finished\n'
-	echo $'Please check for config file conflicts!\n'
+    message_starts $'Upgrading packages\n\n'
+    "$OPKGBIN" install $PACKS_NAMES
+    ret=$?
+    echo ""
+    message_ends $'Upgrade finished\n'
+    echo $'Please check for config file conflicts!\n'
 }
 
 ### Start execution
