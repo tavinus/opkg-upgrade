@@ -168,7 +168,7 @@ do_upgrade() {
     echo ""
     message_ends $'Upgrade finished\n'
     echo $'Please check for config file conflicts!\n'
-	return $ret
+    return $ret
 }
 
 ### Start execution
