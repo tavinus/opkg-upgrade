@@ -79,9 +79,22 @@ get_options() {
                 CHECK_UPDATES_FLAG=$FALSE ; shift ;;
             -f|--force)
                 FORCE_FLAG=$TRUE ; shift ;;
-            *) echo "Invalid option: $1" ; exit 2 ;;
+            -*) 
+                print_banner
+                echo "Invalid option: $1"$'\n' ; exit 2 ;;
+            *)  
+                check_invalid_opts "$1" ; break ;;
         esac
     done
+}
+
+check_invalid_opts() {
+    if [[ ! -z "$1" ]]; then
+        print_banner
+        echo "Invalid Option: $1"$'\n'
+        exit 2
+    fi
+    return 0    
 }
 
 ### Printing functions
@@ -140,8 +153,8 @@ opkg_update() {
 ### OPKG Upgradable
 opkg_upgradable() {
     message_starts "Getting upgradable packages list"
-    PACKS="$($OPKGBIN list-upgradable)"
-    #PACKS="$(cat pkg-example.txt)" # testing
+    #PACKS="$($OPKGBIN list-upgradable)"
+    PACKS="$(cat pkg-example.txt)" # testing
     PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
     PACK_COUNT="$(echo "$PACKS" | wc -l)"
     message_ends
