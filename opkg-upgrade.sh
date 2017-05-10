@@ -9,7 +9,7 @@
 # Will list packages and ask for confirmation
 #
 # This Script:
-# PLACEHOLDER
+# https://gist.github.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076
 #
 # Simple oneliner version:
 # https://gist.github.com/tavinus/997d896cebd575bfaf1706ce6e701c2d
