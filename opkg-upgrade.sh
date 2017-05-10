@@ -39,7 +39,7 @@ fi
 
 
 message_start "Updating package lists"
-# "$OPKGBIN" update >/dev/null;
+"$OPKGBIN" update >/dev/null;
 message_ends
 
 
