@@ -43,7 +43,7 @@ PACK_COUNT=""
 ### Main function
 main() {
     print_banner
-	check_for_opkg
+    check_for_opkg
     if should_run_update; then
         opkg_update
     else
