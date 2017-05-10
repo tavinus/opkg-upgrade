@@ -94,6 +94,8 @@ print_help() {
     echo "Usage: $OPKGUP_NAME [-nf]
 
 Options:
+  -V, --version           Show program name and version and exits
+  -h, --help              Show this help screen and exits
   -n, --no-opkg-update    Skip opkg update at the beginning,
                           may not find packages if not up to date
   -f, --force             Do not ask for confirmation,
