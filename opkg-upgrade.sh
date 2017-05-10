@@ -19,7 +19,7 @@
 OPKGUPVERSION="0.1.1"
 OPKGBIN="$(which opkg 2>/dev/null)"
 
-message_start() {
+message_starts() {
     echo -n ".... | $1"$'\r'
 }
 
@@ -38,12 +38,12 @@ fi
 
 
 
-message_start "Updating package lists"
+message_starts "Updating package lists"
 "$OPKGBIN" update >/dev/null;
 message_ends
 
 
-message_start "Getting upgradable packages list"
+message_starts "Getting upgradable packages list"
 PACKS="$($OPKGBIN list-upgradable)"
 message_ends
 
@@ -64,7 +64,7 @@ echo -e "$PACKS"
 read -p $'\nProceed with upgrade? (Y/y to proceed) ' -n 1 -r
 echo $'\n'
 if [[ "$REPLY" = Y || "$REPLY" = y ]]; then
-    message_start $'Upgrading packages\n\n'
+    message_starts $'Upgrading packages\n\n'
     "$OPKGBIN" install $PACKS_NAMES
     ret=$?
     echo ""
