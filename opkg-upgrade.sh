@@ -21,6 +21,7 @@
 ### Initialization
 OPKGUPVERSION="0.1.2"
 OPKGBIN="$(which opkg 2>/dev/null)"
+BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
 
 ### Silly SH
 TRUE=0
@@ -71,7 +72,7 @@ get_options() {
     while :; do
         case "$1" in
             -V|--version|--Version)
-                print_banner ; exit 0 ;;
+                print_banner 'nopadding' ; exit 0 ;;
             -h|--help|--Help)
                 print_help ; exit 0 ;;
             -n|--no-pkg-update)
@@ -85,7 +86,13 @@ get_options() {
 
 ### Printing functions
 print_banner() {
-    echo $'\nSimple OPKG Updater v'"$OPKGUPVERSION"$'\n'
+    local str=""
+    if [[ "$1" = 'nopadding' ]]; then
+        str="$BANNERSTRING"
+    else
+        str=$'\n'"$BANNERSTRING"$'\n'
+    fi
+    echo "$str"
 }
 
 print_help() {
