@@ -13,6 +13,7 @@
 # This Script:
 # https://github.com/tavinus/opkg-upgrade
 
+
 ### Initialization
 OPKGUPVERSION="0.1.2"
 OPKGBIN="$(which opkg 2>/dev/null)"
