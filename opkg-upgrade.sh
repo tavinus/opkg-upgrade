@@ -11,6 +11,8 @@
 # From v0.1.2 it has -h, -V, -h and -f parameters
 # Use ./opkg-upgrade.sh --help for more info
 #
+# How to install using CURL or WGET:
+#
 # Local install to current dir on './opkg-upgrade.sh':
 # TGT_INST='./opkg-upgrade.sh' && wget 'http://bit.ly/opkg-upgrade' -O "$TGT_INST" && chmod 755 "$TGT_INST"
 # TGT_INST='./opkg-upgrade.sh' && curl -L 'http://bit.ly/opkg-upgrade' -o "$TGT_INST" && chmod 755 "$TGT_INST"
