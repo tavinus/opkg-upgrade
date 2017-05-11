@@ -138,14 +138,14 @@ check_for_opkg() {
 }
 
 ### OPKG Update
-should_run_update() {
-    return $CHECK_UPDATES_FLAG
-}
-
 opkg_update() {
     message_starts "Updating package lists"
     "$OPKGBIN" update >/dev/null;
     message_ends
+}
+
+should_run_update() {
+    return $CHECK_UPDATES_FLAG
 }
 
 ### OPKG Upgradable
