@@ -61,7 +61,7 @@ main() {
     if should_run_update; then
         opkg_update
     else
-        message_ends "Ignoring Package lists update"
+        message_ends "Ignoring package lists update"
     fi
     opkg_upgradable
     if ! opkg_has_update; then
