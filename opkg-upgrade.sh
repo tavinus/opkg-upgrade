@@ -8,10 +8,21 @@
 # opkg list-upgradable
 #
 # Will list packages and ask for confirmation
-# From v0.1.2 it has -h, -V, -h and -f parameters
 # Use ./opkg-upgrade.sh --help for more info
 #
+# This Script:
+# https://gist.github.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076
+#
+# Simple oneliner version:
+# https://gist.github.com/tavinus/997d896cebd575bfaf1706ce6e701c2d
+#
+#
 # How to install using CURL or WGET:
+#
+# NOTE: curl/get may fail because of missing SSL certificates.
+# You may choose to ignore the certificates check using 
+# 'curl -k' or 'wget --no-check-certificate'.
+# Or you will need to fix your /etc/ssl/certs/ca-certificates.crt installation.
 #
 # Local install to current dir on './opkg-upgrade.sh':
 # TGT_INST='./opkg-upgrade.sh' && wget 'http://bit.ly/opkg-upgrade' -O "$TGT_INST" && chmod 755 "$TGT_INST"
@@ -20,16 +31,6 @@
 # System install to '/usr/sbin/opkg-upgrade' (no .sh extension) :
 # TGT_INST='/usr/sbin/opkg-upgrade' && wget 'http://bit.ly/opkg-upgrade' -O "$TGT_INST" && chmod 755 "$TGT_INST"
 # TGT_INST='/usr/sbin/opkg-upgrade' && curl -L 'http://bit.ly/opkg-upgrade' -o "$TGT_INST" && chmod 755 "$TGT_INST"
-#
-# NOTE: curl may fail because of missing/bugged SSL certificates.
-# You may need to use the -k parameter to ignore certificates as in 'curl -k'.
-# Or you will need to fix your /etc/ssl/certs/ca-certificates.crt installation.
-#
-# This Script:
-# https://gist.github.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076
-#
-# Simple oneliner version:
-# https://gist.github.com/tavinus/997d896cebd575bfaf1706ce6e701c2d
 
 
 ### Initialization
