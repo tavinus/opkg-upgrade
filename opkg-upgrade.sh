@@ -108,7 +108,7 @@ print_banner() {
 
 print_help() {
     print_banner
-    echo "Usage: $OPKGUP_NAME [-nf]
+    echo "Usage: $OPKGUP_NAME [-n,-f]
 
 Options:
   -V, --version           Show program name and version and exits
@@ -117,6 +117,15 @@ Options:
                           may not find packages if not up to date
   -f, --force             Do not ask for confirmation,
                           will update everything available
+
+Notes:
+  Parameters should not be grouped.
+  You must pass each parameter in its own.
+  The order is irrelevant.
+
+Examples:
+  $OPKGUP_NAME -nf     # INVALID PARAMETER
+  $OPKGUP_NAME -n -f   # VALID PARAMETERS
 "
 }
 
