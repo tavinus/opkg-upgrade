@@ -19,7 +19,7 @@
 #
 # How to install using CURL or WGET:
 #
-# NOTE: curl/get may fail because of missing SSL certificates.
+# NOTE: curl/wget may fail because of missing SSL certificates.
 # You may choose to ignore the certificates check using 
 # 'curl -k' or 'wget --no-check-certificate'.
 # Or you will need to fix your /etc/ssl/certs/ca-certificates.crt installation.
