@@ -12,26 +12,6 @@
 #
 # This Script:
 # https://github.com/tavinus/opkg-upgrade
-#
-# Simple oneliner version:
-# https://gist.github.com/tavinus/997d896cebd575bfaf1706ce6e701c2d
-#
-#
-# How to install using CURL or WGET:
-#
-# NOTE: curl/wget may fail because of missing SSL certificates.
-# You may choose to ignore the certificates check using 
-# 'curl -k' or 'wget --no-check-certificate'.
-# Or you will need to fix your /etc/ssl/certs/ca-certificates.crt installation.
-#
-# Local install to current dir on './opkg-upgrade.sh':
-# TGT_INST='./opkg-upgrade.sh' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
-# TGT_INST='./opkg-upgrade.sh' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
-#
-# System install to '/usr/sbin/opkg-upgrade' (no .sh extension) :
-# TGT_INST='/usr/sbin/opkg-upgrade' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
-# TGT_INST='/usr/sbin/opkg-upgrade' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
-
 
 ### Initialization
 OPKGUPVERSION="0.1.2"
