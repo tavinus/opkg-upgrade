@@ -11,7 +11,7 @@
 # Use ./opkg-upgrade.sh --help for more info
 #
 # This Script:
-# https://gist.github.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076
+# https://github.com/tavinus/opkg-upgrade
 #
 # Simple oneliner version:
 # https://gist.github.com/tavinus/997d896cebd575bfaf1706ce6e701c2d
@@ -25,12 +25,12 @@
 # Or you will need to fix your /etc/ssl/certs/ca-certificates.crt installation.
 #
 # Local install to current dir on './opkg-upgrade.sh':
-# TGT_INST='./opkg-upgrade.sh' && wget 'http://bit.ly/opkg-upgrade' -O "$TGT_INST" && chmod 755 "$TGT_INST"
-# TGT_INST='./opkg-upgrade.sh' && curl -L 'http://bit.ly/opkg-upgrade' -o "$TGT_INST" && chmod 755 "$TGT_INST"
+# TGT_INST='./opkg-upgrade.sh' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
+# TGT_INST='./opkg-upgrade.sh' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
 #
 # System install to '/usr/sbin/opkg-upgrade' (no .sh extension) :
-# TGT_INST='/usr/sbin/opkg-upgrade' && wget 'http://bit.ly/opkg-upgrade' -O "$TGT_INST" && chmod 755 "$TGT_INST"
-# TGT_INST='/usr/sbin/opkg-upgrade' && curl -L 'http://bit.ly/opkg-upgrade' -o "$TGT_INST" && chmod 755 "$TGT_INST"
+# TGT_INST='/usr/sbin/opkg-upgrade' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
+# TGT_INST='/usr/sbin/opkg-upgrade' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
 
 
 ### Initialization
