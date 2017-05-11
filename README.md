@@ -173,7 +173,7 @@ Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.
   
 This should be enough to make SSL work:  
 ```
-opkg install ca-certificates openssl-utils
+opkg install ca-certificates openssl-util
 ```
 And this may be a workaround if you still have problems:
 ```
