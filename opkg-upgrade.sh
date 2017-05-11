@@ -51,7 +51,7 @@ OPKGUP_NAME="$(basename $0)"
 ### Execution vars, populated later
 PACKS=""
 PACKS_NAMES=""
-PACK_COUNT=""
+PACKS_COUNT=""
 
 
 ### Main function
@@ -64,11 +64,11 @@ main() {
         message_ends "Ignoring Package lists update"
     fi
     opkg_upgradable
-    if ! opkg_have_update; then
+    if ! opkg_has_update; then
         echo $'\nNo packages to install!\n'
         exit 0
     fi
-    echo $'\n'"Packages available for upgrade: $PACK_COUNT"$'\n'
+    echo $'\n'"Packages available for upgrade: $PACKS_COUNT"$'\n'
     echo -e "$PACKS"
     if ! no_confirm; then
         if ! confirm_upgrade; then
@@ -177,11 +177,11 @@ opkg_upgradable() {
     PACKS="$($OPKGBIN list-upgradable)"
     #PACKS="$(cat pkg-example.txt)" # testing
     PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
-    PACK_COUNT="$(echo "$PACKS" | wc -l)"
+    PACKS_COUNT="$(echo "$PACKS" | wc -l)"
     message_ends
 }
 
-opkg_have_update() {
+opkg_has_update() {
     [[ -z "$PACKS" ]] && return $FALSE
     return $TRUE
 }
