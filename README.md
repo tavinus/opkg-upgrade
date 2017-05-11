@@ -1,7 +1,7 @@
 # opkg-upgrade
 List and install OpenWRT / LEDE opkg upgradable packages  
  
-Little ash app for easier opkg package upgrades.  
+Little `ash` app for easier opkg package upgrades.  
 You should check for config conflicts after upgrades!  
   
 ### Help example:
