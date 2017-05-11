@@ -168,9 +168,12 @@ You may choose to ignore the certificates check using `curl -k` or `wget --no-ch
 Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
   
 On some installs I had to 2 things to make SSL work:  
- - Run `opkg install ca-certificates`
- - Run  `mkdir -p -m0755 /etc/ssl/certs; curl -k -o /etc/ssl/certs/ca-certificates.crt -L http://curl.haxx.se/ca/cacert.pem`
-  
+```
+opkg install ca-certificates
+```
+```
+mkdir -p -m0755 /etc/ssl/certs && curl -k -o /etc/ssl/certs/ca-certificates.crt -L http://curl.haxx.se/ca/cacert.pem
+```
 Relevant links:
  - https://wiki.openwrt.org/doc/howto/wget-ssl-certs
  - https://forum.openwrt.org/viewtopic.php?pid=284368#p284368
