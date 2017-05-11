@@ -1,8 +1,12 @@
 # opkg-upgrade
 List and install OpenWRT / LEDE opkg upgradable packages  
  
-Little `ash` app for easier opkg package upgrades.  
-You should check for config conflicts after upgrades!  
+Little `ash` app for easier opkg package upgrades. 
+  
+**You should check for config conflicts after upgrades!**  
+**Make sure you have enough space on root before installing stuff!**  
+This script is small enough but SSL support for curl/wget is not!  
+You also need free space for downloading and installing the packages!  
   
 ### Help example:
 ```
@@ -167,10 +171,11 @@ No packages to install!
 You may choose to ignore the certificates check using `curl -k` or `wget --no-check-certificate`.  
 Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
   
-On some installs I had to 2 things to make SSL work:  
+This should be enough to make SSL work:  
 ```
-opkg install ca-certificates
+opkg install ca-certificates openssl-utils
 ```
+And this may be a workaround if you still have problems:
 ```
 mkdir -p -m0755 /etc/ssl/certs && curl -k -o /etc/ssl/certs/ca-certificates.crt -L http://curl.haxx.se/ca/cacert.pem
 ```
