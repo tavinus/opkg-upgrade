@@ -184,7 +184,7 @@ Relevant links:
  - https://forum.openwrt.org/viewtopic.php?pid=284368#p284368
  - https://dev.openwrt.org/ticket/19621
   
-### Local install to current dir on './opkg-upgrade.sh':
+### Local install to current dir on `./opkg-upgrade.sh`:
 using `wget`
 ```
 TGT_INST='./opkg-upgrade.sh' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
