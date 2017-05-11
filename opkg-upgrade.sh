@@ -134,7 +134,7 @@ Options:
 
 Notes:
   Parameters should not be grouped.
-  You must pass each parameter in its own.
+  You must pass each parameter on its own.
   The order is irrelevant.
 
 Examples:
