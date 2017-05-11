@@ -1,8 +1,8 @@
 # opkg-upgrade
-List and install OpenWRT / LEDE opkg upgradable packages
+List and install OpenWRT / LEDE opkg upgradable packages  
  
-Little ash app for easier opkg package upgrades.
-You should check for config conflicts after upgrades!
+Little ash app for easier opkg package upgrades.  
+You should check for config conflicts after upgrades!  
   
 ### Help example:
 ```
@@ -29,6 +29,7 @@ Examples:
   opkg-upgrade.sh -nf     # INVALID PARAMETER
   opkg-upgrade.sh -n -f   # VALID PARAMETERS
 ```
+  
 ### Example run:
 ```
 # ./opkg-upgrade.sh
@@ -146,6 +147,7 @@ Done | Upgrade finished
 Please check for config file conflicts!
   
 ```
+  
 ### When all up-to-date:
 ```
 # ./opkg-upgrade.sh -f -n
@@ -156,4 +158,40 @@ Done | Ignoring package lists update
 Done | Getting upgradable packages list
 
 No packages to install!
+```
+  
+    
+## How to install using CURL or WGET:  
+  
+#### NOTE: curl / wget may fail because of missing SSL certificates.
+You may choose to ignore the certificates check using `curl -k` or `wget --no-check-certificate`.  
+Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
+  
+On some installs I had to 2 things to make SSL work:  
+ - Run `opkg install ca-certificates`
+ - Run  `mkdir -p -m0755 /etc/ssl/certs; curl -k -o /etc/ssl/certs/ca-certificates.crt -L http://curl.haxx.se/ca/cacert.pem`
+  
+Relevant links:
+ - https://wiki.openwrt.org/doc/howto/wget-ssl-certs
+ - https://forum.openwrt.org/viewtopic.php?pid=284368#p284368
+ - https://dev.openwrt.org/ticket/19621
+  
+### Local install to current dir on './opkg-upgrade.sh':
+using `wget`
+```
+TGT_INST='./opkg-upgrade.sh' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
+```
+using `curl`
+```
+TGT_INST='./opkg-upgrade.sh' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
+```
+
+### System install to  `/usr/sbin/opkg-upgrade` (no .sh extension) :
+using `wget`
+```
+TGT_INST='/usr/sbin/opkg-upgrade' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
+```
+using `curl`
+```
+TGT_INST='/usr/sbin/opkg-upgrade' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
 ```
