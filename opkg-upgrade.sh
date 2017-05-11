@@ -11,6 +11,18 @@
 # From v0.1.2 it has -h, -V, -h and -f parameters
 # Use ./opkg-upgrade.sh --help for more info
 #
+# Local install to current dir on './opkg-upgrade.sh':
+# wget 'https://gist.githubusercontent.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076/raw/' -O './opkg-upgrade.sh' && chmod 755 './opkg-upgrade.sh'
+# curl 'https://gist.githubusercontent.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076/raw/' -o './opkg-upgrade.sh' && chmod 755 './opkg-upgrade.sh'
+#
+# System install to '/usr/sbin/opkg-upgrade' (no .sh extension) :
+# wget 'https://gist.githubusercontent.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076/raw/' -O '/usr/sbin/opkg-upgrade' && chmod 755 '/usr/sbin/opkg-upgrade'
+# curl 'https://gist.githubusercontent.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076/raw/' -o '/usr/sbin/opkg-upgrade' && chmod 755 '/usr/sbin/opkg-upgrade'
+#
+# NOTE: curl may fail because of missing/bugged SSL certificates.
+# You may need to use the -k parameter to ignore certificates as in 'curl -k'.
+# Or you will need to fix your /etc/ssl/certs/ca-certificates.crt installation.
+#
 # This Script:
 # https://gist.github.com/tavinus/bf6dff1c11e7c9951b829b4e33eb6076
 #
