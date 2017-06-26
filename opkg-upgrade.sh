@@ -16,7 +16,7 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.2.2"
+OPKGUPVERSION="0.2.3"
 OPKGBIN="$(which opkg 2>/dev/null)"
 SSMTPBIN="$(which ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
@@ -89,15 +89,13 @@ main() {
                 echo -e "$email_data" | "$SSMTPBIN" "$SEND_TO"
                 exit $?
             fi
-        else
-            echo "whyyyy"
         fi
         exit 0
     else
         echo -e "$uplist"
     fi
     just_print && exit 0
-    opkg_has_update || { echo ; exit 0 ; }
+    opkg_has_update || { echo '' ; exit 0 ; }
 
     if ! no_confirm; then
         if ! confirm_upgrade; then
