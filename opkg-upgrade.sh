@@ -16,7 +16,7 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.2.1"
+OPKGUPVERSION="0.2.2"
 OPKGBIN="$(which opkg 2>/dev/null)"
 SSMTPBIN="$(which ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
@@ -72,9 +72,8 @@ main() {
     upgrade_check      # may exit here
 
     local uplist="$(list_upgrades)"
-    local hasups=$?
     if should_send_ssmtp || just_print_html; then
-        if [ $hasups -eq 0 ] || should_always_send || just_print_html; then
+        if opkg_has_update || should_always_send || just_print_html; then
             QUIET_MODE=$FALSE
             local email_data=''
             if is_html_email; then
@@ -90,13 +89,15 @@ main() {
                 echo -e "$email_data" | "$SSMTPBIN" "$SEND_TO"
                 exit $?
             fi
+        else
+            echo "whyyyy"
         fi
         exit 0
     else
         echo -e "$uplist"
     fi
     just_print && exit 0
-    [ $hasups -ne 0 ] && exit 0
+    opkg_has_update || { echo ; exit 0 ; }
 
     if ! no_confirm; then
         if ! confirm_upgrade; then
@@ -129,7 +130,7 @@ list_upgrades() {
         echo -e "$PACKS"
         return $TRUE
     fi
-    echo $'\nNo packages to install!\n'
+    echo $'No packages to install!\n\n'
     return $FALSE
 }
 
