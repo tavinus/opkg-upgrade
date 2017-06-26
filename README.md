@@ -182,7 +182,7 @@ Done | Getting upgradable packages list
 
 No packages to install!
 ```
-## Install using git:  
+## Install using `git`:  
 Clone it in current directory and use the `-i` option to install it to `/usr/sbin/opkg-upgrade`
 ```
 # git clone git://github.com/tavinus/opkg-upgrade.git
@@ -190,7 +190,7 @@ Clone it in current directory and use the `-i` option to install it to `/usr/sbi
 # ./opkg-upgrade.sh -i
 ```
 
-## Install using CURL or WGET:  
+## Install using `curl` or `wget`:  
 
 #### NOTE: curl / wget may fail because of missing SSL certificates.
 You may choose to ignore the certificates check using:
@@ -198,6 +198,7 @@ You may choose to ignore the certificates check using:
  - `wget --no-check-certificate`  
 
 Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
+Please note that SSL support takes quite a lot of storage space.  
 
 This should be enough to make SSL work:  
 ```
