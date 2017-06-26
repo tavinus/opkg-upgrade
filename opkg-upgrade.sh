@@ -16,7 +16,7 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.2.0"
+OPKGUPVERSION="0.2.1"
 OPKGBIN="$(which opkg 2>/dev/null)"
 SSMTPBIN="$(which ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
@@ -46,7 +46,7 @@ OPKGUP_LOCATION="$(readlink -f $0)"
 ### Execution vars, populated later
 PACKS=""
 PACKS_NAMES=""
-PACKS_COUNT=""
+PACKS_COUNT=0
 
 
 
@@ -293,11 +293,14 @@ opkg_upgradable() {
     PACKS="$($OPKGBIN list-upgradable)"
     [ $? -eq 0 ] || rt_exception $'Error when trying list upgradable packages. Permissions?\n'
     #PACKS="$(cat pkg-example.txt)" # testing
-    PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
-    #echo -ne "$PACKS" | awk '{ printf "pack: %s from: %s to: %s \n", $1, $3, $5 }'
-    PACKS_COUNT="$(echo "$PACKS" | wc -l)"
+    if ! is_empty "$PACKS"; then
+        PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
+        #echo -ne "$PACKS" | awk '{ printf "pack: %s from: %s to: %s \n", $1, $3, $5 }'
+        PACKS_COUNT="$(echo "$PACKS" | wc -l)"
+    fi
     message_ends
     is_quiet || echo ""
+    return $TRUE
 }
 
 
