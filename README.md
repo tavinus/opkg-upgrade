@@ -196,8 +196,9 @@ Clone it in current directory and use the `-i` option to install it to `/usr/sbi
 You may choose to ignore the certificates check using:
  - `curl -k`
  - `wget --no-check-certificate`.  
+
 Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
-  
+
 This should be enough to make SSL work:  
 ```
 opkg install ca-certificates openssl-util
