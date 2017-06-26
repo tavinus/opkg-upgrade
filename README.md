@@ -1,39 +1,58 @@
 # opkg-upgrade
 List and install OpenWRT / LEDE opkg upgradable packages.  
- 
-Little `ash` app for easier opkg package upgrades. 
-  
+
+Little `ash` app for easier opkg package upgrades.
+
 **You should check for config conflicts after upgrades!**  
 **Make sure you have enough space on root before installing stuff!**  
 This script is small enough but SSL support for curl/wget is not!  
 You also need free space for downloading and installing the packages!  
-  
+
 ### Help example:
 ```
 # ./opkg-upgrade.sh -h
 
-Simple OPKG Updater v0.1.2
+Simple OPKG Updater v0.2.0
 
-Usage: opkg-upgrade.sh [-n,-f]
+Usage: opkg-upgrade.sh [options]
 
 Options:
-  -V, --version           Show program name and version and exits
-  -h, --help              Show this help screen and exits
-  -n, --no-opkg-update    Skip opkg update at the beginning,
-                          may not find packages if not up to date
-  -f, --force             Do not ask for confirmation,
-                          will update everything available
+  -V, --version         Show program name and version and exits
+  -h, --help            Show this help screen and exits
+  -i, --install [dir]   Install opkg-upgrade to [dir] or /usr/sbin
+                        Leave [dir] empty for default (/usr/sbin)
+  -u, --upgrade-check   Returns SUCCESS if there are updates available
+                        Quiet execution, returns 0 or 1
+  -l, --list-upgrades   Prints the list of available updates and exits
+  -e, --email-list      Prints the list of updates in html email format
+                        Includes subject, mime type and html formated data
+  -s, --ssmtp <email>   Use the system's ssmtp to send update reports
+                        You need to install and configure ssmtp beforehand
+  -a, --always-send     Send e-mail even if there are no updates
+                        By default e-mails are only sent when updates are available
+  -t, --text-only       Send e-mail in plain text format.
+                        By default, e-mails are sent in html format.
+  -n, --no-opkg-update  Skip opkg update at the beginning,
+                        may not find packages if not up to date
+  -f, --force           Do not ask for confirmation,
+                        will update everything available
 
 Notes:
-  Parameters should not be grouped.
-  You must pass each parameter on its own.
-  The order is irrelevant.
+  - Short options should not be grouped. You must pass each parameter on its own.
+  - You must have a working ssmtp install to use the ssmtp functionality. Make
+    sure you can send e-mails from it before trying from opkg-upgrade.
 
 Examples:
-  opkg-upgrade.sh -nf     # INVALID PARAMETER
-  opkg-upgrade.sh -n -f   # VALID PARAMETERS
+  opkg-upgrade.sh -n -f      # run without updating listings and asking for upgrade
+  opkg-upgrade.sh --install  # install to /usr/sbin/opkg-upgrade
+  opkg-upgrade.sh -l         # just print upgrades available
+  opkg-upgrade.sh -e         # just print html formatted email
+  opkg-upgrade.sh -s 'mail@example.com'    # mail upgrade report if have updates
+  opkg-upgrade.sh -a -s 'mail@example.com' # mail upgrade report even if NO updates
+  opkg-upgrade.sh -u && echo 'upgrades are available' || echo 'no upgrades available'
+
 ```
-  
+
 ### Example run:
 ```
 # ./opkg-upgrade.sh
@@ -149,9 +168,9 @@ Collected errors:
 Done | Upgrade finished
 
 Please check for config file conflicts!
-  
+
 ```
-  
+
 ### When all up-to-date:
 ```
 # ./opkg-upgrade.sh -f -n
@@ -163,12 +182,20 @@ Done | Getting upgradable packages list
 
 No packages to install!
 ```
-  
-    
-## How to install using CURL or WGET:  
-  
+## Install using git:  
+Clone it in current directory and use the `-i` option to install it to `/usr/sbin/opkg-upgrade`
+```
+# git clone git://github.com/tavinus/opkg-upgrade.git
+# cd opkg-upgrade
+# ./opkg-upgrade.sh -i
+```
+
+## Install using CURL or WGET:  
+
 #### NOTE: curl / wget may fail because of missing SSL certificates.
-You may choose to ignore the certificates check using `curl -k` or `wget --no-check-certificate`.  
+You may choose to ignore the certificates check using:
+ - `curl -k`
+ - `wget --no-check-certificate`.  
 Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
   
 This should be enough to make SSL work:  
@@ -183,7 +210,7 @@ Relevant links:
  - https://wiki.openwrt.org/doc/howto/wget-ssl-certs
  - https://forum.openwrt.org/viewtopic.php?pid=284368#p284368
  - https://dev.openwrt.org/ticket/19621
-  
+
 ### Local install to current dir on `./opkg-upgrade.sh`:
 using `wget`
 ```
