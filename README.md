@@ -195,7 +195,7 @@ Clone it in current directory and use the `-i` option to install it to `/usr/sbi
 #### NOTE: curl / wget may fail because of missing SSL certificates.
 You may choose to ignore the certificates check using:
  - `curl -k`
- - `wget --no-check-certificate`.  
+ - `wget --no-check-certificate`  
 
 Or you will need to fix your `/etc/ssl/certs/ca-certificates.crt` installation.  
 
