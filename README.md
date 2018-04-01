@@ -8,8 +8,9 @@ Little `ash` app for easier opkg package upgrades.
 This script is small enough but SSL support for curl/wget is not!  
 You also need free space for downloading and installing the packages!  
   
-**If you use OpenWRT(LEDE) trunk (dev snapshots), you should probably NOT upgrade**  
-As [mentioned here](https://lede-project.org/docs/user-guide/extroot_configuration?s[]=extroot#remote_file_systems), if you are using the trunk snapshots, upgrading can soft-brick your device.  
+**If you use OpenWRT trunk (dev snapshots), you should probably NOT upgrade**  
+Upgrading development versions can soft-brick your device.  
+You should try to backup your config and do a full install of a later snapshot if you are running dev/trunk.  
 Main releases are fine (just trunk/snapshots are affected by this).  
 It is probably the opposite for releases (recommended to upgrade), since you will get security patches if you upgrade those.
 
