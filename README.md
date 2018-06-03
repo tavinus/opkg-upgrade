@@ -219,22 +219,49 @@ Relevant links:
  - https://forum.openwrt.org/viewtopic.php?pid=284368#p284368
  - https://dev.openwrt.org/ticket/19621
 
-### Local install to current dir on `./opkg-upgrade.sh`:
-using `wget`
-```
-TGT_INST='./opkg-upgrade.sh' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
-```
-using `curl`
-```
-TGT_INST='./opkg-upgrade.sh' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
+### Oneliners to run from internet ( downloads to `/tmp` ) :
+```bash
+# using wget with SSL
+wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "/tmp/opkg-upgrade.sh" && chmod 755 "/tmp/opkg-upgrade.sh" && /tmp/opkg-upgrade.sh
+
+# using wget WITHOUT SSL
+wget --no-check-certificate 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "/tmp/opkg-upgrade.sh" && chmod 755 "/tmp/opkg-upgrade.sh" && /tmp/opkg-upgrade.sh
+
+# using curl with SSL
+curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "/tmp/opkg-upgrade.sh" && chmod 755 "/tmp/opkg-upgrade.sh" && /tmp/opkg-upgrade.sh
+
+# using curl WITHOUT SSL
+curl -k -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "/tmp/opkg-upgrade.sh" && chmod 755 "/tmp/opkg-upgrade.sh" && /tmp/opkg-upgrade.sh
 ```
 
-### System install to  `/usr/sbin/opkg-upgrade` (no .sh extension) :
-using `wget`
+### Local install to current dir ( `./opkg-upgrade.sh` ) :
+Run with `./opkg-upgrade.sh` after downloading
+```bash
+# using wget with SSL
+wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "opkg-upgrade.sh" && chmod 755 "opkg-upgrade.sh"
+
+# using wget WITHOUT SSL
+wget --no-check-certificate 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "opkg-upgrade.sh" && chmod 755 "opkg-upgrade.sh"
+
+# using curl with SSL
+curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "opkg-upgrade.sh" && chmod 755 "opkg-upgrade.sh"
+
+# using curl WITHOUT SSL
+curl -k -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "opkg-upgrade.sh" && chmod 755 "opkg-upgrade.sh"
 ```
-TGT_INST='/usr/sbin/opkg-upgrade' && wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "$TGT_INST" && chmod 755 "$TGT_INST"
-```
-using `curl`
-```
-TGT_INST='/usr/sbin/opkg-upgrade' && curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "$TGT_INST" && chmod 755 "$TGT_INST"
+
+### System install to `/usr/sbin/opkg-upgrade` (no .sh extension) :
+Run with `opkg-upgrade` after downloading 
+```bash
+# using wget with SSL
+wget 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "/usr/sbin/opkg-upgrade" && chmod 755 "/usr/sbin/opkg-upgrade"
+
+# using wget WITHOUT SSL
+wget --no-check-certificate 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -O "/usr/sbin/opkg-upgrade" && chmod 755 "/usr/sbin/opkg-upgrade"
+
+# using curl with SSL
+curl -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "/usr/sbin/opkg-upgrade" && chmod 755 "/usr/sbin/opkg-upgrade"
+
+# using curl WITHOUT SSL
+curl -k -L 'https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh' -o "/usr/sbin/opkg-upgrade" && chmod 755 "/usr/sbin/opkg-upgrade"
 ```
