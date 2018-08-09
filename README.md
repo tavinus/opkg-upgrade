@@ -13,7 +13,13 @@ Upgrading development versions can soft-brick your device.
 You should try to backup your config and do a full install of a later snapshot if you are running dev/trunk.  
 Main releases are fine (just trunk/snapshots are affected by this).  
 It is probably the opposite for releases (recommended to upgrade), since you will get security patches if you upgrade those.
+  
+---------------------------------------------- 
+#### If you want to support this project, you can give me a cup of coffee :coffee:  
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RRJATYHXV8JQY)  
 
+----------------------------------------------  
+  
 ### Help example:
 ```
 # ./opkg-upgrade.sh -h
