@@ -3,7 +3,7 @@
 # Gustavo Arnosti Neves
 #
 # Created: May / 2017
-# Updated: Jun / 2017
+# Updated: Dec / 2018
 #
 # Upgrade packages listed by:
 # opkg list-upgradable
@@ -16,7 +16,7 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.2.3"
+OPKGUPVERSION="0.3.0"
 OPKGBIN="$(which opkg 2>/dev/null)"
 SSMTPBIN="$(which ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
@@ -47,7 +47,7 @@ OPKGUP_LOCATION="$(readlink -f $0)"
 PACKS=""
 PACKS_NAMES=""
 PACKS_COUNT=0
-
+PACKS_COLS="0 0 0"
 
 
 
@@ -125,11 +125,31 @@ upgrade_check() {
 list_upgrades() {
     if opkg_has_update; then
         echo "Packages available for upgrade: $PACKS_COUNT"$'\n'
-        echo -e "$PACKS"
+        #echo -e "$PACKS"
+        prettyPrintPacks
         return $TRUE
     fi
     echo $'No packages to install!\n\n'
     return $FALSE
+}
+
+prettyPrintPacks() {
+    echo -ne "$PACKS" | awk '
+function rep(c, n){ s=sprintf("%" n "s",""); gsub(/ /,c,s); return s }
+BEGIN{ j=1; } NR>1{
+l[j, 1]=($1); 
+l[j, 2]=($3); 
+l[j++, 3]=($5);  
+max[1]=(length($1)>max[1]?length($1):max[1]); 
+max[2]=(length($3)>max[2]?length($3):max[2]); 
+max[3]=(length($5)>max[3]?length($5):max[3]);
+max[1]=(max[1]>=7?max[1]:7); 
+max[2]=(max[2]>=7?max[2]:7); 
+max[3]=(max[3]>=7?max[3]:7); 
+} 
+function div(){ printf "+-----+%s+%s+%s+\n", rep("-", max[1]+2), rep("-", max[2]+2), rep("-", max[3]+2) }
+function head() { printf "| %3s | %-" max[1] "s | %-" max[2] "s | %-" max[3] "s |\n", "#", "Package", "Current", "Update" }
+END {div() ; head() ; div() ; for (i=1; i<NR; i++) printf "| %3d | %-" max[1] "s | %-" max[2] "s | %-" max[3] "s |\n", i, l[i, 1], l[i, 2], l[i, 3]; div()}'
 }
 
 ### Parse CLI options
@@ -289,11 +309,12 @@ opkg_update() {
 # get list of upgradable packages
 opkg_upgradable() {
     message_starts "Getting upgradable packages list"
-    PACKS="$($OPKGBIN list-upgradable)"
+    PACKS="$($OPKGBIN list-upgradable | sort | grep -v 'same name marked HOLD or PREFER. Using latest.')"
     [ $? -eq 0 ] || rt_exception $'Error when trying list upgradable packages. Permissions?\n'
     #PACKS="$(cat pkg-example.txt)" # testing
     if ! is_empty "$PACKS"; then
         PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
+        PACKS_COLS="$(echo -ne "$PACKS" | awk 'NR>1{for (i=1; i<=NF; i=i+2) max[i]=(length($i)>max[i]?length($i):max[i])} END {for (i=1; i<=NF; i=i+2) printf "%d ", max[i]}')"
         #echo -ne "$PACKS" | awk '{ printf "pack: %s from: %s to: %s \n", $1, $3, $5 }'
         PACKS_COUNT="$(echo "$PACKS" | wc -l)"
     fi
