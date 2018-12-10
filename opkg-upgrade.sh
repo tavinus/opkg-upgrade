@@ -16,7 +16,7 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.3.1"
+OPKGUPVERSION="0.3.2"
 OPKGBIN="$(which opkg 2>/dev/null)"
 SSMTPBIN="$(which ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
@@ -310,7 +310,7 @@ opkg_update() {
 opkg_upgradable() {
     message_starts "Getting upgradable packages list"
     PACKS="$($OPKGBIN list-upgradable | sort | grep -v 'marked HOLD or PREFER')"
-    [ $? -eq 0 ] || rt_exception $'Error when trying list upgradable packages. Permissions?\n'
+    #[ $? -eq 0 ] || rt_exception $'Error when trying list upgradable packages. Permissions?\n'
     #PACKS="$(cat pkg-example.txt)" # testing
     if ! is_empty "$PACKS"; then
         PACKS_NAMES="$(echo -ne "$PACKS" | awk '{ printf "%s ", $1 }')"
