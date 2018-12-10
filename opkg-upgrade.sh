@@ -16,12 +16,15 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.3.2"
+OPKGUPVERSION="0.3.4"
 OPKGBIN="$(which opkg 2>/dev/null)"
 SSMTPBIN="$(which ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
 TIMESTAMP="$(date '+%Y/%m/%d %H:%M:%S' 2>/dev/null)"
 OPKGUP_INSTALL_DIR='/usr/sbin'
+OPENWRT_RELEASE="/etc/openwrt_release"
+ROUTER_NAME="$(uname -n)"
+HTML_FONT="font-family:'Trebuchet MS', Helvetica, sans-serif;"
 
 ### Silly SH
 TRUE=0
@@ -47,12 +50,18 @@ OPKGUP_LOCATION="$(readlink -f $0)"
 PACKS=""
 PACKS_NAMES=""
 PACKS_COUNT=0
-PACKS_COLS="0 0 0"
 
 
 
 
 ########################### FUNCTIONS STARTS
+
+# Load info from /etc/openwrt_release into memory
+source_release() {
+    if is_file "$OPENWRT_RELEASE"; then
+        . "$OPENWRT_RELEASE"
+    fi
+}
 
 # get opkg packages listings and upgradable info
 opkg_init() {
@@ -67,6 +76,7 @@ opkg_init() {
 
 # main function
 main() {
+    source_release
     print_banner
     opkg_init
     upgrade_check      # may exit here
@@ -81,7 +91,7 @@ main() {
             else
                 email_data="$(print_txt_email "$uplist")"
             fi
-            #local email_data="$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $(uname -n)"$'\n\n'"$uplist"$'\n\n'"Generated on: $TIMESTAMP"
+            #local email_data="$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $ROUTER_NAME"$'\n\n'"$uplist"$'\n\n'"Generated on: $TIMESTAMP"
             if just_print_html; then
                 echo -e "$email_data"
                 exit 0
@@ -96,6 +106,8 @@ main() {
     fi
     just_print && exit 0
     opkg_has_update || { echo '' ; exit 0 ; }
+    
+    openwrt_is_snapshot && print_snapshot_disclaimer
 
     if ! no_confirm; then
         if ! confirm_upgrade; then
@@ -126,14 +138,24 @@ list_upgrades() {
     if opkg_has_update; then
         echo "Packages available for upgrade: $PACKS_COUNT"$'\n'
         #echo -e "$PACKS"
-        prettyPrintPacks
+        print_packs_txt
         return $TRUE
     fi
     echo $'No packages to install!\n\n'
     return $FALSE
 }
 
-prettyPrintPacks() {
+# Print router info in plain text
+print_info_txt() {
+                                           printf "%s\n" "Router name.: $ROUTER_NAME"
+    is_not_empty "$DISTRIB_DESCRIPTION" && printf "%s\n" "Description.: $DISTRIB_DESCRIPTION"
+    is_not_empty "$DISTRIB_TARGET"      && printf "%s\n" "Target......: $DISTRIB_TARGET"
+    is_not_empty "$DISTRIB_ARCH"        && printf "%s\n" "Arch........: $DISTRIB_ARCH"
+    echo ""
+}
+
+# Pretty print package lists in plain text
+print_packs_txt() {
     echo -ne "$PACKS" | awk '
 function rep(c, n){ s=sprintf("%" n "s",""); gsub(/ /,c,s); return s }
 BEGIN{ j=1; } NR>0{
@@ -203,6 +225,11 @@ check_invalid_opts() {
 # prints message to stderr
 print_error() {
     echo "$@" >&2
+}
+
+# Prints Warning about upgrading beta/trunk versions
+print_snapshot_disclaimer() {
+    printf "\n%s\n%s\n%s\n%s\n" "WARNING! You are running a Beta / Snapshot / Trunk version!" "Upgrading snapshots MAY cause undesired results, including soft-bricks." "The current trunk head may not be compatible with your installed version!" "You have been warned! Proceed at your own risk!"
 }
 
 # prints program name and version
@@ -333,17 +360,18 @@ print_html_email() {
 
 # prints an email report in txt format
 print_txt_email() {
-    echo "$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $(uname -n)"$'\n\n'"$1"$'\n\n'"Generated on: $TIMESTAMP"
+    #echo "$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $ROUTER_NAME"$'\n\n'"$1"$'\n\n'"Generated on: $TIMESTAMP"
+    echo "$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"$(print_info_txt)"$'\n\n'"$1"$'\n\n'"Generated on: $TIMESTAMP"
 }
 
 # prints the packages html table
 print_html_table() {
     echo '<br>'
-    is_empty "$PACKS" && { echo '<br><br><h3>No packages to install.</h3>' ; return $TRUE ; }
+    is_empty "$PACKS" && { echo '<br><br><h3 style="'"$HTML_FONT"' font-size:13pt; font-weight:bold">No packages to install.</h3>' ; return $TRUE ; }
     local td_padding='padding-left:8px;padding-right:10px;padding-top:12px;padding-bottom:12px;'
     local td_open='<td style=\"'"$td_padding"'\">'
     local th_open='<th style="'"$td_padding"'">'
-    echo '<table border="1" width="600px" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">'
+    echo '<table border="1" width="600px" cellpadding="0" cellspacing="0" style="border-collapse:collapse; '"$HTML_FONT"' font-size:10pt">'
     echo '<tr style="background-color:#2f3263; color:#EEE;" align="left" margin=0 padding=0>'$'\n\t'"$th_open"'#</th>'$'\n\t'"$th_open"'Pack</th>'$'\n\t'"$th_open"'Current</th>'$'\n\t'"$th_open"'Update</th>'$'\n''</tr>'
     # most of the table is generated using awk
     echo -ne "$PACKS" | \
@@ -354,9 +382,15 @@ awk 'BEGIN{ i=1; l=""; } { if (i % 2) l=""; else l=" style=\"background-color:#d
 
 # prints html email info
 print_html_header() {
-    echo $'\n\n''<h2>'"$(print_banner 'nopadding')"'</h2>'
-    echo '<h3>'"Report for: $(uname -n)"'</h3>'
-    echo '<h3>'"Packages available for upgrade: $PACKS_COUNT"'</h3>'
+    echo $'\n\n''<h2 style="'"$HTML_FONT"' font-size:14pt; margin-top:1.5em; font-weight:bold">'"$(print_banner 'nopadding')"'</h2>'
+    echo '<table border="1" width="600px" cellpadding="6pt" cellspacing="0" style="border-collapse:collapse;'"$HTML_FONT"' font-size:11pt">'
+    
+    echo '<tr><td style="font-weight:bold">Router Name</td><td>'"$ROUTER_NAME"'</td></tr>'
+    is_not_empty "$DISTRIB_DESCRIPTION" && echo '<tr><td style="font-weight:bold">Description</td><td>'"$DISTRIB_DESCRIPTION"'</td></tr>'
+    is_not_empty "$DISTRIB_TARGET" && echo '<tr><td style="font-weight:bold">Target</td><td>'"$DISTRIB_TARGET"'</td></tr>'
+    is_not_empty "$DISTRIB_ARCH" && echo '<tr><td style="font-weight:bold">Arch</td><td>'"$DISTRIB_ARCH"'</td></tr>'
+    echo '<tr><td style="font-weight:bold">Updates Count</td><td>'"$PACKS_COUNT"'</td></tr>'
+    echo '</table>'
 }
 
 # prints html email mime type and format
@@ -366,7 +400,7 @@ print_html_mime() {
 
 # prints html email info footer
 print_html_timestamp() {
-    echo $'\n''<h4>'"Generated on: $TIMESTAMP by "'<a href="https://github.com/tavinus/opkg-upgrade">opkg-upgrade</a></h4>'$'\n'
+    echo $'\n''<h4 style="'"$HTML_FONT"'">'"Generated on: $TIMESTAMP by "'<a href="https://github.com/tavinus/opkg-upgrade">opkg-upgrade</a></h4>'$'\n'
 }
 
 # prints the email subject
@@ -441,6 +475,12 @@ is_valid_email() {
     return $TRUE
 }
 
+# returns $TRUE if it is a valid file, $FALSE otherwise
+is_file() {
+    [ -f "$1" ] && return $TRUE
+    return $FALSE
+}
+
 # returns $TRUE if it is a valid folder, $FALSE otherwise
 is_dir() {
     [ -d "$1" ] && return $TRUE
@@ -470,6 +510,13 @@ opkg_has_update() {
     is_empty "$PACKS" && return $FALSE
     return $TRUE
 }
+
+# returns $TRUE if $DISTRIB_RELEASE equals SNAPSHOT
+openwrt_is_snapshot() {
+    [ "$DISTRIB_RELEASE" = "SNAPSHOT" ] && return $TRUE
+    return $FALSE
+}
+
 
 
 
