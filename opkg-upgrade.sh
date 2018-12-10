@@ -309,7 +309,7 @@ opkg_update() {
 # get list of upgradable packages
 opkg_upgradable() {
     message_starts "Getting upgradable packages list"
-    PACKS="$($OPKGBIN list-upgradable | sort | grep -v 'same name marked HOLD or PREFER. Using latest.')"
+    PACKS="$($OPKGBIN list-upgradable | sort | grep -v 'marked HOLD or PREFER')"
     [ $? -eq 0 ] || rt_exception $'Error when trying list upgradable packages. Permissions?\n'
     #PACKS="$(cat pkg-example.txt)" # testing
     if ! is_empty "$PACKS"; then
