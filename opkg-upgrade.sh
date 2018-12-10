@@ -16,9 +16,9 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.3.4"
-OPKGBIN="$(which opkg 2>/dev/null)"
-SSMTPBIN="$(which ssmtp 2>/dev/null)"
+OPKGUPVERSION="0.3.5"
+OPKGBIN="$(command -v opkg 2>/dev/null)"
+SSMTPBIN="$(command -v ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
 TIMESTAMP="$(date '+%Y/%m/%d %H:%M:%S' 2>/dev/null)"
 OPKGUP_INSTALL_DIR='/usr/sbin'
