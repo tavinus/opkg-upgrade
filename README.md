@@ -15,8 +15,8 @@ Main releases are fine (just trunk/snapshots are affected by this).
 It is probably the opposite for releases (recommended to upgrade), since you will get security patches if you upgrade those.
   
 ---------------------------------------------- 
-#### If you want to support this project, you can give me a cup of coffee :coffee:  
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RRJATYHXV8JQY)  
+#### If you want to support this project, you can provide me with some :coffee:  
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A9N3VU2DHP82A&source=url)  
 
 ----------------------------------------------  
   
