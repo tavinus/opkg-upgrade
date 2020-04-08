@@ -12,7 +12,7 @@
 # Use ./opkg-upgrade.sh --help for more info
 #
 # This Script:
-# https://github.com/tavinus/opkg-upgrade
+# https://github.com/nmasse-itix/opkg-upgrade
 
 
 ### Initialization
@@ -400,7 +400,7 @@ print_html_mime() {
 
 # prints html email info footer
 print_html_timestamp() {
-    echo $'\n''<h4 style="'"$HTML_FONT"'">'"Generated on: $TIMESTAMP by "'<a href="https://github.com/tavinus/opkg-upgrade">opkg-upgrade</a></h4>'$'\n'
+    echo $'\n''<h4 style="'"$HTML_FONT"'">'"Generated on: $TIMESTAMP by "'<a href="https://github.com/nmasse-itix/opkg-upgrade">opkg-upgrade</a></h4>'$'\n'
 }
 
 # prints the email subject
