@@ -3,7 +3,7 @@
 # Gustavo Arnosti Neves
 #
 # Created: May / 2017
-# Updated: Dec / 2018
+# Updated: Oct / 2020
 #
 # Upgrade packages listed by:
 # opkg list-upgradable
@@ -22,9 +22,9 @@ SSMTPBIN="$(command -v ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
 TIMESTAMP="$(date '+%Y/%m/%d %H:%M:%S' 2>/dev/null)"
 OPKGUP_INSTALL_DIR='/usr/sbin'
-OPENWRT_RELEASE="/etc/openwrt_release"
-ROUTER_NAME="$(uname -n)"
 HTML_FONT="font-family:'Trebuchet MS', Helvetica, sans-serif;"
+TMP_FOLDER="/tmp"
+REPOSITORY="https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh"
 
 ### Silly SH
 TRUE=0
@@ -41,6 +41,7 @@ SEND_TO=""
 ALWAYS_SEND_FLAG=$FALSE
 HTML_FORMAT=$TRUE
 JUST_PRINT_HTML_FLAG=$FALSE
+CHECK_VERSION_FLAG=$FALSE
 
 ### This scripts name
 OPKGUP_NAME="$(basename $0)"
@@ -52,15 +53,11 @@ PACKS_NAMES=""
 PACKS_COUNT=0
 
 
-
-
 ########################### FUNCTIONS STARTS
 
-# Load info from /etc/openwrt_release into memory
+# Load info from /etc/os-release into memory
 source_release() {
-    if is_file "$OPENWRT_RELEASE"; then
-        . "$OPENWRT_RELEASE"
-    fi
+. /etc/os-release  #POSIX system identification 
 }
 
 # get opkg packages listings and upgradable info
@@ -74,11 +71,30 @@ opkg_init() {
     opkg_upgradable
 }
 
+#checks if script newer version exists and replaces older one
+version_upgrade () {
+    message_starts   "Checking version"
+    wget $REPOSITORY -O $TMP_FOLDER/$OPKGUP_NAME >/dev/null 2>&1
+    LOCAL_VERSION=$(grep -w $OPKGUPVERSION $TMP_FOLDER/$OPKGUP_NAME)
+    if echo "$LOCAL_VERSION" | grep -q "$OPKGUPVERSION"; then
+        message_ends "You already have version $OPKGUPVERSION"
+        exit 0
+    else
+        cp -f $TMP_FOLDER/$OPKGUP_NAME $OPKGUP_LOCATION
+        chmod a+x $OPKGUP_LOCATION 
+        message_ends "Newer version installed"
+        exit 0
+    fi
+}
+
 # main function
 main() {
     source_release
     print_banner
     opkg_init
+    if should_run_version_check; then
+         version_upgrade
+    fi
     upgrade_check      # may exit here
 
     local uplist="$(list_upgrades)"
@@ -91,7 +107,7 @@ main() {
             else
                 email_data="$(print_txt_email "$uplist")"
             fi
-            #local email_data="$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $ROUTER_NAME"$'\n\n'"$uplist"$'\n\n'"Generated on: $TIMESTAMP"
+            #local email_data="$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $HOSTNAME"$'\n\n'"$uplist"$'\n\n'"Generated on: $TIMESTAMP"
             if just_print_html; then
                 echo -e "$email_data"
                 exit 0
@@ -147,10 +163,10 @@ list_upgrades() {
 
 # Print router info in plain text
 print_info_txt() {
-                                           printf "%s\n" "Router name.: $ROUTER_NAME"
-    is_not_empty "$DISTRIB_DESCRIPTION" && printf "%s\n" "Description.: $DISTRIB_DESCRIPTION"
-    is_not_empty "$DISTRIB_TARGET"      && printf "%s\n" "Target......: $DISTRIB_TARGET"
-    is_not_empty "$DISTRIB_ARCH"        && printf "%s\n" "Arch........: $DISTRIB_ARCH"
+                                           printf "%s\n" "Router name.: $HOSTNAME"
+    is_not_empty "$OPENWRT_RELEASE"   && printf "%s\n" "Description.: $OPENWRT_RELEASE"
+    is_not_empty "$OPENWRT_BOARD"     && printf "%s\n" "Target......: $OPENWRT_BOARD"
+    is_not_empty "$DISTRIB_ARCH"      && printf "%s\n" "Arch........: $DISTRIB_ARCH"
     echo ""
 }
 
@@ -200,6 +216,8 @@ get_options() {
                 CHECK_UPDATES_FLAG=$FALSE ; shift ;;
             -f|--force)
                 FORCE_FLAG=$TRUE ; shift ;;
+            -c|--check-version)
+                CHECK_VERSION_FLAG=$TRUE ; shift ;;
             -q|--quiet)
                 QUIET_MODE=$TRUE ; shift ;;
             *)
@@ -255,6 +273,8 @@ Options:
   -h, --help            Show this help screen and exits
   -i, --install [dir]   Install opkg-upgrade to [dir] or /usr/sbin
                         Leave [dir] empty for default (/usr/sbin)
+  -c,--upgrade-version  Check if newer version exists 
+                        and replace  local one with current
   -u, --upgrade-check   Returns SUCCESS if there are updates available
                         Quiet execution, returns 0 or 1
   -l, --list-upgrades   Prints the list of available updates and exits
@@ -284,6 +304,7 @@ Examples:
   $OPKGUP_NAME -s 'mail@example.com'    # mail upgrade report if have updates
   $OPKGUP_NAME -a -s 'mail@example.com' # mail upgrade report even if NO updates
   $OPKGUP_NAME -u && echo 'upgrades are available' || echo 'no upgrades available'
+  $OPKGUP_NAME -c         # upgrade script to current version 
 
 "
 }
@@ -360,7 +381,7 @@ print_html_email() {
 
 # prints an email report in txt format
 print_txt_email() {
-    #echo "$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $ROUTER_NAME"$'\n\n'"$1"$'\n\n'"Generated on: $TIMESTAMP"
+    #echo "$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"Report for: $HOSTNAME"$'\n\n'"$1"$'\n\n'"Generated on: $TIMESTAMP"
     echo "$(email_subject)"$'\n\n'"$(print_banner)"$'\n\n'"$(print_info_txt)"$'\n\n'"$1"$'\n\n'"Generated on: $TIMESTAMP"
 }
 
@@ -385,9 +406,9 @@ print_html_header() {
     echo $'\n\n''<h2 style="'"$HTML_FONT"' font-size:14pt; margin-top:1.5em; font-weight:bold">'"$(print_banner 'nopadding')"'</h2>'
     echo '<table border="1" width="600px" cellpadding="6pt" cellspacing="0" style="border-collapse:collapse;'"$HTML_FONT"' font-size:11pt">'
     
-    echo '<tr><td style="font-weight:bold">Router Name</td><td>'"$ROUTER_NAME"'</td></tr>'
-    is_not_empty "$DISTRIB_DESCRIPTION" && echo '<tr><td style="font-weight:bold">Description</td><td>'"$DISTRIB_DESCRIPTION"'</td></tr>'
-    is_not_empty "$DISTRIB_TARGET" && echo '<tr><td style="font-weight:bold">Target</td><td>'"$DISTRIB_TARGET"'</td></tr>'
+    echo '<tr><td style="font-weight:bold">Router Name</td><td>'"$HOSTNAME"'</td></tr>'
+    is_not_empty "$OPENWRT_RELEASE" && echo '<tr><td style="font-weight:bold">Description</td><td>'"$OPENWRT_RELEASE"'</td></tr>'
+    is_not_empty "$OPENWRT_BOARD" && echo '<tr><td style="font-weight:bold">Target</td><td>'"$OPENWRT_BOARD"'</td></tr>'
     is_not_empty "$DISTRIB_ARCH" && echo '<tr><td style="font-weight:bold">Arch</td><td>'"$DISTRIB_ARCH"'</td></tr>'
     echo '<tr><td style="font-weight:bold">Updates Count</td><td>'"$PACKS_COUNT"'</td></tr>'
     echo '</table>'
@@ -519,7 +540,6 @@ openwrt_is_snapshot() {
 
 
 
-
 ###### OPERATION FLAGS
 
 # returns $TRUE if we should use the HTML format, $FALSE for TXT format
@@ -567,7 +587,10 @@ just_print_html() {
     return $JUST_PRINT_HTML_FLAG
 }
 
-
+# returns $TRUE if we should update this script, $FALSE otherwise
+should_run_version_check() {
+    return $CHECK_VERSION_FLAG
+}
 
 ###### SSMTP functions
 
@@ -598,12 +621,11 @@ ssmtp_check() {
 }
 
 
-
-
-
 ###### START EXECUTION
 
 get_options "$@"
+#only root can install upgrades 
+[ $(id -u) = 0 ] || { echo "Error! start script as root" ; exit 20 ; } 
 main
 
 exit 20 # should never get here
