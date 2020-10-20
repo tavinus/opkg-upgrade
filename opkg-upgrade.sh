@@ -122,7 +122,7 @@ main() {
     fi
     just_print && exit 0
     opkg_has_update || { echo '' ; exit 0 ; }
-    
+
     openwrt_is_snapshot && print_snapshot_disclaimer
 
     if ! no_confirm; then
@@ -166,7 +166,7 @@ print_info_txt() {
                                            printf "%s\n" "Router name.: $HOSTNAME"
     is_not_empty "$OPENWRT_RELEASE"   && printf "%s\n" "Description.: $OPENWRT_RELEASE"
     is_not_empty "$OPENWRT_BOARD"     && printf "%s\n" "Target......: $OPENWRT_BOARD"
-    is_not_empty "$DISTRIB_ARCH"      && printf "%s\n" "Arch........: $DISTRIB_ARCH"
+    is_not_empty "$OPENWRT_ARCH"      && printf "%s\n" "Arch........: $OPENWRT_ARCH"
     echo ""
 }
 
@@ -184,7 +184,7 @@ max[3]=(length($5)>max[3]?length($5):max[3]);
 max[1]=(max[1]>=7?max[1]:7); 
 max[2]=(max[2]>=7?max[2]:7); 
 max[3]=(max[3]>=7?max[3]:7); 
-} 
+}
 function div(){ printf "+-----+%s+%s+%s+\n", rep("-", max[1]+2), rep("-", max[2]+2), rep("-", max[3]+2) }
 function head() { printf "| %3s | %-" max[1] "s | %-" max[2] "s | %-" max[3] "s |\n", "#", "Package", "Current", "Update" }
 END {div() ; head() ; div() ; for (i=1; i<=NR; i++) printf "| %3d | %-" max[1] "s | %-" max[2] "s | %-" max[3] "s |\n", i, l[i, 1], l[i, 2], l[i, 3]; div()}'
@@ -274,7 +274,7 @@ Options:
   -i, --install [dir]   Install opkg-upgrade to [dir] or /usr/sbin
                         Leave [dir] empty for default (/usr/sbin)
   -c,--upgrade-version  Check if newer version exists 
-                        and replace  local one with current
+                        and replace  local copy with newest
   -u, --upgrade-check   Returns SUCCESS if there are updates available
                         Quiet execution, returns 0 or 1
   -l, --list-upgrades   Prints the list of available updates and exits
@@ -405,11 +405,11 @@ awk 'BEGIN{ i=1; l=""; } { if (i % 2) l=""; else l=" style=\"background-color:#d
 print_html_header() {
     echo $'\n\n''<h2 style="'"$HTML_FONT"' font-size:14pt; margin-top:1.5em; font-weight:bold">'"$(print_banner 'nopadding')"'</h2>'
     echo '<table border="1" width="600px" cellpadding="6pt" cellspacing="0" style="border-collapse:collapse;'"$HTML_FONT"' font-size:11pt">'
-    
+
     echo '<tr><td style="font-weight:bold">Router Name</td><td>'"$HOSTNAME"'</td></tr>'
     is_not_empty "$OPENWRT_RELEASE" && echo '<tr><td style="font-weight:bold">Description</td><td>'"$OPENWRT_RELEASE"'</td></tr>'
     is_not_empty "$OPENWRT_BOARD" && echo '<tr><td style="font-weight:bold">Target</td><td>'"$OPENWRT_BOARD"'</td></tr>'
-    is_not_empty "$DISTRIB_ARCH" && echo '<tr><td style="font-weight:bold">Arch</td><td>'"$DISTRIB_ARCH"'</td></tr>'
+    is_not_empty "$OPENWRT_ARCH" && echo '<tr><td style="font-weight:bold">Arch</td><td>'"$OPENWRT_ARCH"'</td></tr>'
     echo '<tr><td style="font-weight:bold">Updates Count</td><td>'"$PACKS_COUNT"'</td></tr>'
     echo '</table>'
 }
@@ -625,7 +625,7 @@ ssmtp_check() {
 
 get_options "$@"
 #only root can install upgrades 
-[ $(id -u) = 0 ] || { echo "Error! start script as root" ; exit 20 ; } 
+[ $(id -u) = 0 ] || { echo "Error! start script as root" ; exit 20 ; }
 main
 
 exit 20 # should never get here
