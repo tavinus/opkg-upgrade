@@ -16,7 +16,7 @@
 
 
 ### Initialization
-OPKGUPVERSION="0.3.5"
+OPKGUPVERSION="0.3.6"
 OPKGBIN="$(command -v opkg 2>/dev/null)"
 SSMTPBIN="$(command -v ssmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
