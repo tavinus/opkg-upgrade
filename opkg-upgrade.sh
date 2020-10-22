@@ -25,6 +25,7 @@ OPKGUP_INSTALL_DIR='/usr/sbin'
 HTML_FONT="font-family:'Trebuchet MS', Helvetica, sans-serif;"
 TMP_FOLDER="/tmp"
 REPOSITORY="https://raw.githubusercontent.com/tavinus/opkg-upgrade/master/opkg-upgrade.sh"
+BLACKLIST="/etc/opkg-blacklist"
 
 ### Silly SH
 TRUE=0
@@ -146,6 +147,14 @@ upgrade_check() {
         opkg_has_update && exit 0
         exit 1
     fi
+}
+
+#blacklist exclude from upgrading 
+exclude_blacklist () {
+    ## private repo for tests 
+    #be filled when done 
+    #sh is castrated in comparition to bash
+    #so i need to make some workaround wip ;-)
 }
 
 # Prints the list of upgrades available,
