@@ -42,7 +42,7 @@ SEND_TO=""
 ALWAYS_SEND_FLAG=$FALSE
 HTML_FORMAT=$TRUE
 JUST_PRINT_HTML_FLAG=$FALSE
-CHECK_VERSION_FLAG=$FALSE
+UPGRADE_SELF_FLAG=$FALSE
 
 ### This scripts name
 OPKGUP_NAME="$(basename $0)"
@@ -58,7 +58,9 @@ PACKS_COUNT=0
 
 # Load info from /etc/os-release into memory
 source_release() {
-. /etc/os-release  #POSIX system identification 
+if test -e /etc-release ; then 
+    . /etc/os-release  
+fi
 }
 
 # get opkg packages listings and upgradable info
@@ -149,14 +151,6 @@ upgrade_check() {
     fi
 }
 
-#blacklist exclude from upgrading 
-exclude_blacklist () {
-    ## private repo for tests 
-    #be filled when done 
-    #sh is castrated in comparition to bash
-    #so i need to make some workaround wip ;-)
-}
-
 # Prints the list of upgrades available,
 # returns $TRUE if we have updates available, $FALSE otherwise
 list_upgrades() {
@@ -225,8 +219,8 @@ get_options() {
                 CHECK_UPDATES_FLAG=$FALSE ; shift ;;
             -f|--force)
                 FORCE_FLAG=$TRUE ; shift ;;
-            -c|--check-version)
-                CHECK_VERSION_FLAG=$TRUE ; shift ;;
+            -c|--self-upgrade)
+                UPGRADE_SELF_FLAG=$TRUE ; shift ;;
             -q|--quiet)
                 QUIET_MODE=$TRUE ; shift ;;
             *)
@@ -282,7 +276,9 @@ Options:
   -h, --help            Show this help screen and exits
   -i, --install [dir]   Install opkg-upgrade to [dir] or /usr/sbin
                         Leave [dir] empty for default (/usr/sbin)
-  -c,--upgrade-version  Check if newer version exists 
+  -c,--self-upgrade     Upgrades itself in-place (same path/name opkg-upgrade.sh caller)
+                        Downloads the master branch tarball and tries to self-upgrade
+  Check if newer version exists 
                         and replace  local copy with newest
   -u, --upgrade-check   Returns SUCCESS if there are updates available
                         Quiet execution, returns 0 or 1
@@ -598,7 +594,7 @@ just_print_html() {
 
 # returns $TRUE if we should update this script, $FALSE otherwise
 should_run_version_check() {
-    return $CHECK_VERSION_FLAG
+    return $UPGRADE_SELF_FLAG
 }
 
 ###### SSMTP functions
@@ -634,7 +630,7 @@ ssmtp_check() {
 
 get_options "$@"
 #only root can install upgrades 
-[ $(id -u) = 0 ] || { echo "Error! start script as root" ; exit 20 ; }
+#[ $(id -u) = 0 ] || { echo "Error! start script as root" ; exit 20 ; }
 main
 
 exit 20 # should never get here
