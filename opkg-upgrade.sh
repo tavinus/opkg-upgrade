@@ -414,7 +414,7 @@ email_subject() {
 
 # asks the user to confirm the upgrade
 confirm_upgrade() {
-    read -p $'\nProceed with upgrade? (Y/y to proceed) ' -n 1 -r
+    read -p $'\nProceed with upgrade? (Y/n to proceed) ' -n 1 -r
     echo $'\n'
     if [[ "$REPLY" = Y || "$REPLY" = y ]]; then
         return $TRUE
