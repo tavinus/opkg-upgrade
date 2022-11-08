@@ -12,13 +12,13 @@
 # Use ./opkg-upgrade.sh --help for more info
 #
 # This Script:
-# https://github.com/tavinus/opkg-upgrade
+# https://github.com/nmasse-itix/opkg-upgrade
 
 
 ### Initialization
 OPKGUPVERSION="0.3.6"
 OPKGBIN="$(command -v opkg 2>/dev/null)"
-SSMTPBIN="$(command -v ssmtp 2>/dev/null)"
+MSMTPBIN="$(command -v msmtp 2>/dev/null)"
 BANNERSTRING="Simple OPKG Updater v$OPKGUPVERSION"
 TIMESTAMP="$(date '+%Y/%m/%d %H:%M:%S' 2>/dev/null)"
 OPKGUP_INSTALL_DIR='/usr/sbin'
@@ -36,7 +36,7 @@ CHECK_UPDATES_FLAG=$TRUE
 FORCE_FLAG=$FALSE
 JUST_CHECK_FLAG=$FALSE
 JUST_PRINT_FLAG=$FALSE
-SSMTP_SEND_FLAG=$FALSE
+MSMTP_SEND_FLAG=$FALSE
 SEND_TO=""
 ALWAYS_SEND_FLAG=$FALSE
 HTML_FORMAT=$TRUE
@@ -82,7 +82,7 @@ main() {
     upgrade_check      # may exit here
 
     local uplist="$(list_upgrades)"
-    if should_send_ssmtp || just_print_html; then
+    if should_send_msmtp || just_print_html; then
         if opkg_has_update || should_always_send || just_print_html; then
             QUIET_MODE=$FALSE
             local email_data=''
@@ -96,7 +96,7 @@ main() {
                 echo -e "$email_data"
                 exit 0
             else
-                echo -e "$email_data" | "$SSMTPBIN" "$SEND_TO"
+                echo -e "$email_data" | "$MSMTPBIN" "$SEND_TO"
                 exit $?
             fi
         fi
@@ -190,8 +190,8 @@ get_options() {
                 QUIET_MODE=$TRUE ; JUST_PRINT_FLAG=$TRUE ; shift ;;
             -e|--email-list|--email-List|--emaillist|--emailList)
                 QUIET_MODE=$TRUE ; JUST_PRINT_HTML_FLAG=$TRUE ; shift ;;
-            -s|--ssmtp)
-                ssmtp_check "$2" ; shift ; shift ;;
+            -m|--msmtp)
+                msmtp_check "$2" ; shift ; shift ;;
             -a|--always-send|--always-Send|--alwayssend|--alwaysSend)
                 ALWAYS_SEND_FLAG=$TRUE ; shift ;;
             -t|--text-only|--text-Only|--textonly|--textOnly)
@@ -260,8 +260,8 @@ Options:
   -l, --list-upgrades   Prints the list of available updates and exits
   -e, --email-list      Prints the list of updates in html email format
                         Includes subject, mime type and html formated data
-  -s, --ssmtp <email>   Use the system's ssmtp to send update reports
-                        You need to install and configure ssmtp beforehand
+  -m, --msmtp <email>   Use the system's msmtp to send update reports
+                        You need to install and configure msmtp beforehand
   -a, --always-send     Send e-mail even if there are no updates
                         By default e-mails are only sent when updates are available
   -t, --text-only       Send e-mail in plain text format.
@@ -273,7 +273,7 @@ Options:
 
 Notes:
   - Short options should not be grouped. You must pass each parameter on its own.
-  - You must have a working ssmtp install to use the ssmtp functionality. Make
+  - You must have a working msmtp install to use the msmtp functionality. Make
     sure you can send e-mails from it before trying from opkg-upgrade.
 
 Examples:
@@ -400,7 +400,7 @@ print_html_mime() {
 
 # prints html email info footer
 print_html_timestamp() {
-    echo $'\n''<h4 style="'"$HTML_FONT"'">'"Generated on: $TIMESTAMP by "'<a href="https://github.com/tavinus/opkg-upgrade">opkg-upgrade</a></h4>'$'\n'
+    echo $'\n''<h4 style="'"$HTML_FONT"'">'"Generated on: $TIMESTAMP by "'<a href="https://github.com/nmasse-itix/opkg-upgrade">opkg-upgrade</a></h4>'$'\n'
 }
 
 # prints the email subject
@@ -552,9 +552,9 @@ just_print() {
     return $JUST_PRINT_FLAG
 }
 
-# returns $TRUE if we should send email with ssmtp, $FALSE otherwise
-should_send_ssmtp() {
-    return $SSMTP_SEND_FLAG
+# returns $TRUE if we should send email with msmtp, $FALSE otherwise
+should_send_msmtp() {
+    return $MSMTP_SEND_FLAG
 }
 
 # returns $TRUE if we should send the e-mail even if there is no updates, $FALSE otherwise
@@ -569,21 +569,21 @@ just_print_html() {
 
 
 
-###### SSMTP functions
+###### MSMTP functions
 
-# Finds and checks for ssmtp executable, returns $TRUE if found, $FALSE otherwise
-find_ssmtp() {
-    is_executable "$SSMTPBIN" && return $TRUE
-    SSMTPBIN='/usr/sbin/ssmtp'
-    is_executable "$SSMTPBIN" && return $TRUE
+# Finds and checks for msmtp executable, returns $TRUE if found, $FALSE otherwise
+find_msmtp() {
+    is_executable "$MSMTPBIN" && return $TRUE
+    MSMTPBIN='/usr/sbin/msmtp'
+    is_executable "$MSMTPBIN" && return $TRUE
     return $FALSE
 }
 
-# Checks for ssmtp program, validates the target email and sets globals for emails
-ssmtp_check() {
-    if ! find_ssmtp; then
+# Checks for msmtp program, validates the target email and sets globals for emails
+msmtp_check() {
+    if ! find_msmtp; then
         print_banner 'error'
-        print_error "Error! Could not find or run the SSMTP executable, make sure it is installed!"
+        print_error "Error! Could not find or run the MSMTP executable, make sure it is installed!"
         exit 30
     fi
     if ! is_valid_email "$1"; then
@@ -592,7 +592,7 @@ ssmtp_check() {
         print_error "Invalid address -> $1"
         exit 30
     fi
-    SSMTP_SEND_FLAG=$TRUE
+    MSMTP_SEND_FLAG=$TRUE
     SEND_TO="$1"
     QUIET_MODE=$TRUE
 }
