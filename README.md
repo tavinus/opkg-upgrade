@@ -32,9 +32,9 @@ It is probably the opposite for releases (recommended to upgrade), since you wil
   
 ### Help example:
 ```
-# opkg-upgrade -h
+root@OpenWrt:~# opkg-upgrade --help
 
-Simple OPKG Updater v0.4.0
+Simple OPKG Updater v0.4.1
 
 Usage: opkg-upgrade [options]
 
@@ -48,6 +48,8 @@ Options:
   -l, --list-upgrades   Prints the list of available updates and exits
   -e, --email-list      Prints the list of updates in html email format
                         Includes subject, mime type and html formated data
+  -s, --ssmtp <email>   Use the system's ssmtp to send update reports
+                        You need to install and configure ssmtp beforehand
   -m, --msmtp <email>   Use the system's msmtp to send update reports
                         You need to install and configure msmtp beforehand
   -a, --always-send     Send e-mail even if there are no updates
@@ -61,8 +63,8 @@ Options:
 
 Notes:
   - Short options should not be grouped. You must pass each parameter on its own.
-  - You must have a working msmtp install to use the msmtp functionality. Make
-    sure you can send e-mails from it before trying from opkg-upgrade.
+  - You must have a working ssmtp or msmtp install to use the email functionality.
+    Make sure you can send e-mails from it before trying from opkg-upgrade.
 
 Examples:
   opkg-upgrade -n -f      # run without updating listings and asking for upgrade
@@ -70,7 +72,7 @@ Examples:
   opkg-upgrade -l         # just print upgrades available
   opkg-upgrade -e         # just print html formatted email
   opkg-upgrade -s 'mail@example.com'    # mail upgrade report if have updates
-  opkg-upgrade -a -s 'mail@example.com' # mail upgrade report even if NO updates
+  opkg-upgrade -a -m 'mail@example.com' # mail upgrade report even if NO updates
   opkg-upgrade -u && echo 'upgrades are available' || echo 'no upgrades available'
 
 ```
