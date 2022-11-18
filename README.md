@@ -17,17 +17,8 @@ It is probably the opposite for releases (recommended to upgrade), since you wil
 ---------------------------------------------- 
 #### If you want to support this project, you can do it here :coffee: :beer:   
   
-##### Paypal  
-  
 [![paypal-image](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A9N3VU2DHP82A&source=url)  
-   
-##### Bitcoin  
   
-![BTC-DONATE](https://user-images.githubusercontent.com/8039413/68523837-6a9cbf80-029d-11ea-8b38-d20a1c6e1a59.png)  
-1AJ9whK9g1Cq83JeQXcp9DdsKjZT7r91vH  
-  
-[Donate USD $10](https://blockchain.com/btc/payment_request?address=1AJ9whK9g1Cq83JeQXcp9DdsKjZT7r91vH&amount=0.00113314&message=opkgupgrade) 
-
 ----------------------------------------------  
   
 ### Help example:
